@@ -171,7 +171,7 @@ function deleteData(id) {
 	accountRef.remove();
 	accountRef.on('value', function(snapshot) {
 		console.log('success');
-		window.location = './';
+		readAccountData();
 	})
 }
 
