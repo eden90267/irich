@@ -49,6 +49,7 @@ function readAccountData() {
 			str += '<h4>目前沒有資料喔！</h4>';
 			dataTableRef.innerHTML = str;
 		} else {
+			loadChart(data);
 			Object.keys(data).forEach(function(key, index) {
 				str += `
 				  <tr>
@@ -202,7 +203,7 @@ function updateBtnListener() {
 			e.preventDefault();
 			const accountRef = database.ref('account/' + id);
 			accountRef.on('value', function(snapshot) {
-				window.location = './update.html?id=' + id + '&title' + snapshot.val().title + '&type=' + snapshot.val().type + '&number=' + snapshot.val().number + '&date=' + snapshot.val().date;
+				window.location = './update.html?id=' + id + '&title=' + snapshot.val().title + '&type=' + snapshot.val().type + '&number=' + snapshot.val().number + '&date=' + snapshot.val().date;
 			});
 		});
 	}
@@ -225,20 +226,13 @@ function deleteBtnListener() {
 }
 
 const path = window.location.pathname;
-console.log(path);
+console.log(`path：'${path}'`);
 
-switch (path) {
-	case '/create.html':
-	    console.log('load create page');
-	    submitListener('create');
-	    break;
-	case '/update.html':
-	    console.log('load update page');
-	    readFormData();
-	    submitListener('update');
-	    break;
-	default:
-	    console.log('load index page');
-	    readAccountData();
-	    break;
+if (path.endsWith('/create.html')) {
+    submitListener('create');
+} else if (path.endsWith('/update.html')) {
+    readFormData();
+	submitListener('update');
+} else {
+    readAccountData();
 }
