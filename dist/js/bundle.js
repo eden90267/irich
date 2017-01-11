@@ -16104,7 +16104,54 @@ function readAccountData() {
 			str += '<h4>目前沒有資料喔！</h4>';
 			dataTableRef.innerHTML = str;
 		} else {
-			loadChart(data);
+			(function (rawData) {
+				var eat = 0;
+				var life = 0;
+				var play = 0;
+				var edu = 0;
+				var trafic = 0;
+				var others = 0;
+				var ctxRef = document.querySelector('#data-chart');
+				var infoRef = document.querySelector('#data-chart-info');
+
+				for (var key in rawData) {
+					if (rawData.hasOwnProperty(key)) {
+						var type = rawData[key].type;
+						var number = rawData[key].number;
+						switch (type) {
+							case 'eat':
+								eat += parseInt(number);
+								break;
+							case 'life':
+								life += parseInt(number);
+								break;
+							case 'play':
+								play += parseInt(number);
+								break;
+							case 'edu':
+								edu += parseInt(number);
+								break;
+							case 'trafic':
+								trafic += parseInt(number);
+								break;
+							case 'others':
+								others += parseInt(number);
+								break;
+						}
+					}
+				}
+				var myPieChart = new _chart2.default(ctxRef, {
+					type: 'pie',
+					data: {
+						labels: ['餐費', '生活', '娛樂', '教育', '交通', '其他'],
+						datasets: [{
+							data: [eat, life, play, edu, trafic, others],
+							backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)', 'rgba(255, 159, 64, 0.5)'],
+							borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)']
+						}]
+					}
+				});
+			})(data);
 			Object.keys(data).forEach(function (key, index) {
 				str += '\n\t\t\t\t  <tr>\n\t\t\t\t    <td>' + data[key].title + '</td>\n\t\t\t\t    <td>' + data[key].type + '</td>\n\t\t\t\t    <td>NT ' + data[key].number + '</td>\n\t\t\t\t    <td>' + data[key].date + '</td>\n\t\t\t\t    <td>\n\t\t\t\t      <button type="button" class="btn btn-primary update-btn" data-id="' + key + '">\u7DE8\u8F2F</button>\n\t\t\t\t      <button type="button" class="btn btn-danger delete-btn" data-id="' + key + '">\u522A\u9664</button>\n\t\t\t\t    </td>\n\t\t\t\t  </tr>\n\t\t\t\t';
 			});
@@ -16112,56 +16159,6 @@ function readAccountData() {
 			updateBtnListener();
 			deleteBtnListener();
 		}
-	});
-}
-
-function loadChart(rawData) {
-	var eat = 0;
-	var life = 0;
-	var play = 0;
-	var edu = 0;
-	var trafic = 0;
-	var others = 0;
-	var ctxRef = document.querySelector('#data-chart');
-	var infoRef = document.querySelector('#data-chart-info');
-
-	for (var key in rawData) {
-		if (rawData.hasOwnProperty(key)) {
-			var type = rawData[key].type;
-			var number = rawData[key].number;
-			switch (type) {
-				case 'eat':
-					eat += parseInt(number);
-					break;
-				case 'life':
-					life += parseInt(number);
-					break;
-				case 'play':
-					play += parseInt(number);
-					break;
-				case 'edu':
-					edu += parseInt(number);
-					break;
-				case 'trafic':
-					trafic += parseInt(number);
-					break;
-				case 'others':
-					others += parseInt(number);
-					break;
-			}
-		}
-	}
-	var data = {
-		labels: ['餐費', '生活', '娛樂', '教育', '交通', '其他'],
-		datasets: [{
-			data: [eat, life, play, edu, trafic, others],
-			backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)', 'rgba(255, 159, 64, 0.5)'],
-			borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)']
-		}]
-	};
-	var myPieChart = new _chart2.default(ctxRef, {
-		type: 'pie',
-		data: data
 	});
 }
 
