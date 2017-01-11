@@ -2,12 +2,12 @@ import uuid from 'uuid';
 import Chart from 'chart.js';
 
 var config = {
-	apiKey: "AIzaSyDs7eTjb4k0nLA83zyJ27JK2Ci8iU47ZT0",
-	authDomain: "fir-irich-example-5c19d.firebaseapp.com",
-	databaseURL: "https://fir-irich-example-5c19d.firebaseio.com",
-	storageBucket: "fir-irich-example-5c19d.appspot.com",
-	messagingSenderId: "457726661885"
-};
+    apiKey: "AIzaSyDs7eTjb4k0nLA83zyJ27JK2Ci8iU47ZT0",
+    authDomain: "fir-irich-example-5c19d.firebaseapp.com",
+    databaseURL: "https://fir-irich-example-5c19d.firebaseio.com",
+    storageBucket: "fir-irich-example-5c19d.appspot.com",
+    messagingSenderId: "457726661885"
+  };
 firebase.initializeApp(config);
 const database = firebase.database();
 
@@ -49,75 +49,6 @@ function readAccountData() {
 			str += '<h4>目前沒有資料喔！</h4>';
 			dataTableRef.innerHTML = str;
 		} else {
-			(function(rawData) {
-				let eat = 0;
-				let life = 0;
-				let play = 0;
-				let edu = 0;
-				let trafic = 0;
-				let others = 0;
-				const ctxRef = document.querySelector('#data-chart');
-				const infoRef = document.querySelector('#data-chart-info');
-
-				for (const key in rawData) {
-					if (rawData.hasOwnProperty(key)) {
-						const type = rawData[key].type;
-						const number = rawData[key].number;
-						switch (type) {
-							case 'eat':
-								eat += parseInt(number);
-								break;
-							case 'life':
-								life += parseInt(number);
-								break;
-							case 'play':
-								play += parseInt(number);
-								break;
-							case 'edu':
-								edu += parseInt(number);
-								break;
-							case 'trafic':
-								trafic += parseInt(number);
-								break;
-							case 'others':
-								others += parseInt(number);
-								break;
-						}
-					}
-				}
-				const myPieChart = new Chart(ctxRef, {
-					type: 'pie',
-					data: {
-						labels: [
-							'餐費',
-							'生活',
-							'娛樂',
-							'教育',
-							'交通',
-							'其他'
-						],
-						datasets: [{
-							data: [eat, life, play, edu, trafic, others],
-							backgroundColor: [
-								'rgba(255, 99, 132, 0.5)',
-								'rgba(54, 162, 235, 0.5)',
-								'rgba(255, 206, 86, 0.5)',
-								'rgba(75, 192, 192, 0.5)',
-								'rgba(153, 102, 255, 0.5)',
-								'rgba(255, 159, 64, 0.5)'
-							],
-							borderColor: [
-								'rgba(255, 99, 132, 1)',
-								'rgba(54, 162, 235, 1)',
-								'rgba(255, 206, 86, 1)',
-								'rgba(75, 192, 192, 1)',
-								'rgba(153, 102, 255, 1)',
-								'rgba(255, 159, 64, 1)'
-							],
-						}]
-					},
-				});
-			})(data);
 			Object.keys(data).forEach(function(key, index) {
 				str += `
 				  <tr>
@@ -136,6 +67,77 @@ function readAccountData() {
 			updateBtnListener();
 			deleteBtnListener();
 		}
+	});
+}
+
+function loadChart(rawData) {
+	let eat = 0;
+	let life = 0;
+	let play = 0;
+	let edu = 0;
+	let trafic = 0;
+	let others = 0;
+	const ctxRef = document.querySelector('#data-chart');
+	const infoRef = document.querySelector('#data-chart-info');
+
+	for (const key in rawData) {
+		if (rawData.hasOwnProperty(key)) {
+			const type = rawData[key].type;
+			const number = rawData[key].number;
+			switch(type) {
+              case 'eat':
+                eat += parseInt(number);
+                break;
+              case 'life':
+                life += parseInt(number);
+                break;
+              case 'play':
+                play += parseInt(number);
+                break;
+              case 'edu':
+                edu += parseInt(number);
+                break;            
+              case 'trafic':
+                trafic += parseInt(number);
+                break; 
+              case 'others':
+                others += parseInt(number);
+                break; 
+            }
+		}
+	}
+	const data = {
+		labels: [
+            '餐費',
+            '生活',
+            '娛樂',
+            '教育',
+            '交通',
+            '其他'
+        ],
+        datasets: [{
+        	data: [eat, life, play, edu, trafic, others],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+        }]
+	};
+	const myPieChart = new Chart(ctxRef, {
+		type: 'pie',
+		data: data,
 	});
 }
 
@@ -223,15 +225,20 @@ function deleteBtnListener() {
 }
 
 const path = window.location.pathname;
+console.log(path);
 
 switch (path) {
 	case '/create.html':
-		submitListener('create');
-		break;
+	    console.log('load create page');
+	    submitListener('create');
+	    break;
 	case '/update.html':
-		readFormData();
-		submitListener('update');
-		break;
+	    console.log('load update page');
+	    readFormData();
+	    submitListener('update');
+	    break;
 	default:
-		readAccountData();
+	    console.log('load index page');
+	    readAccountData();
+	    break;
 }
